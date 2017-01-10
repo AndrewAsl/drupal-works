@@ -1,0 +1,7 @@
+name = Mortar Calculator  
+description = This module calculate ingridients for cement mortar.
+package = Custom
+core = 7.x
+
+
+

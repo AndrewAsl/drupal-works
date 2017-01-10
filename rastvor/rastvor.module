@@ -1,0 +1,65 @@
+<?php
+function rastvor_permission(){
+    return array (
+        'view backend data' => array(
+            'title' => t('Просмотр данных для сервисов'),
+            'description' => t('Разрешить просмотр исходных данных сервисов'),
+        ),
+    );
+}
+/**
+ * Implements hook_menu().
+ *
+ * Set up calls to drupal_get_form() for all our example cases.
+ */
+function rastvor_menu() {
+  $items = array();
+  
+  $items['services/rastvor'] = array(
+    'title' => 'Приготовление растворов',
+    'page callback' => 'rastvor_set_link',
+    //'page arguments' => array('calcmet_customer_form_links'),
+    'access callback' => TRUE,
+    'file' => 'rastvor_user.inc',  
+  );
+  $items['services/rastvor/getoptions'] = array(
+    'page callback' => 'rastvor_ajax_get_options',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,  
+    'file' => 'rastvor_user.inc',   
+  );
+  $items['services/rastvor/calculate'] = array(
+    'page callback' => 'rastvor_calculate',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,  
+    'file' => 'rastvor_user.inc',   
+  );
+  
+  $items['admin/services/rastvor'] = array(
+    'title' => 'Приготовление растворов. Админка',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('rastvor_form_add'),
+    'access arguments' => array('view backend data'),
+    'file' => 'admin_rastvor_add.inc',  
+    //'type' => MENU_LOCAL_TASK,
+    //'weight' => -17,
+  );
+  
+
+  return $items;
+}
+
+function rastvor_entry_insert($basename, $entry) {
+  $return_value = NULL;
+  try {
+    $return_value = db_insert($basename)
+                    ->fields($entry)
+                    ->execute();
+  }
+  catch (Exception $e) {
+    drupal_set_message(t('db_insert failed. Message = %message, query= %query',
+      array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+  }
+  //dpm ($return_value);
+  return $return_value;
+}

@@ -1,0 +1,157 @@
+<?php
+/**
+ * Implements hook_schema().
+ *
+ * Defines the database tables used by this module.
+ * Remember that the easiest way to create the code for hook_schema is with
+ * the @link http://drupal.org/project/schema schema module @endlink
+ *
+ * @see hook_schema()
+ * @ingroup calcmet
+ * 'gost' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'GOST description.', 
+    ),
+ */
+function rastvor_schema() {
+  $schema['rastvorcat'] = array(
+    'description' => 'Category to rastvor',
+    'fields' => array(
+      'rastvorcatid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique person ID.',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the category.',
+      ),
+    ),   
+    'primary key' => array('rastvorcatid'),
+    'indexes' => array(
+      'title'    => array('title'),
+    ),
+  );
+  $schema['rastvortype'] = array(
+    'description' => 'Rastvor\'s type',
+    'fields' => array(
+      'rastvorid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique person ID.',
+      ), 
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the category.',
+      ),  
+    ),
+    'primary key' => array('rastvorid'),
+    'indexes' => array(
+      'title'    => array('title'),
+    ),
+  );
+  $schema['rastvorcatunion'] = array(
+      'description' => 'Union table for category and rastvor',
+      'fields' => array(
+        'rastvorcatid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {rastvorcat}.rastvorcatid",
+        ), 
+        'rastvorid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {rastvortype}.rastvorid",
+        ), 
+      ),
+      'primary key' => array('rastvorcatid', 'rastvorid'), 
+  );
+  $schema['rastvorcementname'] = array(
+    'description' => 'Cement\'s name',
+    'fields' => array(
+      'cementid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique person ID.',
+      ), 
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the category.',
+      ),  
+    ),
+    'primary key' => array('cementid'),
+    'indexes' => array(
+      'title'    => array('title'),
+    ),
+  );
+  
+  $schema['rastvordataset'] = array(
+    'description' => 'Datas set',
+    'fields' => array(
+        'rastvordataid'  => array(
+            'type' => 'serial',
+            'not null' => TRUE,
+            'description' => 'Primary Key: Unique person ID.',
+        ),
+        'rastvorcatid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {rastvorcat}.rastvorcatid",
+        ), 
+        'rastvorid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {rastvortype}.rastvorid",
+        ), 
+        'cementid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {cementname}.cementid",
+        ),
+        'cement' => array(
+            'type' => 'float',
+            'not null' => TRUE,
+        ),
+        'pesok' => array(
+            'type' => 'float',
+            'not null' => TRUE,
+        ),
+        'voda' => array(
+            'type' => 'float',
+            'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('rastvordataid'),
+      'indexes' => array(
+            'cement' => array('cement'),  
+            'pesok' => array('pesok'),  
+            'voda' => array('voda'),  
+         ),
+  );
+
+  return $schema;
+}
+/*function rastvor_update_7100(){
+    $izvest = array(
+            'type' => 'float',
+            'not null' => TRUE,
+        );
+    
+    db_add_field( 'rastvordataset', 'newcol', $izvest);
+}*/

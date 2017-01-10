@@ -1,0 +1,761 @@
+<?php
+function calcmet_permission(){
+    return array (
+        'view backend data' => array(
+            'title' => t('Просмотр данных для сервисов'),
+            'description' => t('Разрешить просмотр исходных данных сервисов'),
+        ),
+    );
+}
+/**
+ * Implements hook_menu().
+ *
+ * Set up calls to drupal_get_form() for all our example cases.
+ */
+function calcmet_menu() {
+  $items = array();
+  
+  $items['services/calcmet'] = array(
+    'title' => 'Калькулятор металлопроката',
+    'page callback' => 'calcmet_set_link',
+    //'page arguments' => array('calcmet_customer_form_links'),
+    'access callback' => TRUE,
+    'file' => 'calcmet_user.inc',  
+  );
+  $items['services/calcmet/armatura'] = array(
+    'title' => 'Арматура',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_armatura_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+    'file' => 'calcmet_user.inc',  
+  );
+  $items['services/calcmet/armatura/armatura_change_info'] = array(
+    'page callback' => 'armatura_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user.inc',  
+  );  
+  $items['services/calcmet/dvutavr'] = array(
+    'title' => 'Двутавр',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_dvutavr_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -8,
+    'file' => 'calcmet_user.inc',  
+  );  
+  $items['services/calcmet/dvutavr/dvutavr_change_info'] = array(
+    'page callback' => 'dvutavr_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user.inc',  
+  );
+  $items['services/calcmet/kvadrat'] = array(
+    'title' => 'Квадрат',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_kvadrat_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -7,
+    'file' => 'calcmet_user_kv.inc',  
+  );
+  $items['services/calcmet/kvadrat/kvadrat_change_info'] = array(
+    'page callback' => 'kvadrat_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_kv.inc',  
+  );
+  $items['services/calcmet/polosa'] = array(
+    'title' => 'Полоса',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_polosa_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -6,
+    'file' => 'calcmet_user_pol.inc',  
+  );
+  $items['services/calcmet/polosa/polosa_change_info'] = array(
+    'page callback' => 'polosa_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_pol.inc',  
+  );
+  $items['services/calcmet/steel'] = array(
+    'title' => 'Сталь',
+    'page callback' => 'set_steel_page',
+    //'page arguments' => array('calcmet_undercat_form','calcmet_steel_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -5,
+    'file' => 'calcmet_user_steel.inc',  
+  );
+  $items['services/calcmet/steel/steel_change_options'] = array(
+    'page callback' => 'steel_change_options',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_steel.inc',  
+  );
+  $items['services/calcmet/steel/steel_change_info'] = array(
+    'page callback' => 'steel_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_steel.inc',  
+  );
+  $items['services/calcmet/tube'] = array(
+    'title' => 'Труба',
+    'page callback' => 'set_tube_page',
+    //'page arguments' => array('calcmet_undercat_form','calcmet_steel_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -4,
+    'file' => 'calcmet_user_tubes.inc',  
+  );
+  $items['services/calcmet/tube/tube_change_options'] = array(
+    'page callback' => 'tube_change_options',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_tubes.inc',  
+  );
+  $items['services/calcmet/tube/tube_change_info'] = array(
+    'page callback' => 'tube_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_tubes.inc',  
+  );
+  $items['services/calcmet/shveller'] = array(
+    'title' => 'Швеллер',
+    'page callback' => 'set_shveller_page',
+    //'page arguments' => array('calcmet_undercat_form','calcmet_steel_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -3,
+    'file' => 'calcmet_user_shveller.inc',  
+  );
+  $items['services/calcmet/shveller/shveller_change_options'] = array(
+    'page callback' => 'shveller_change_options',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_shveller.inc',  
+  );
+  $items['services/calcmet/shveller/shveller_change_info'] = array(
+    'page callback' => 'shveller_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_shveller.inc',  
+  );
+  $items['services/calcmet/shestigrannik'] = array(
+    'title' => 'Шестигранник',
+    'page callback' => 'set_shestigrannik_page',
+    //'page arguments' => array('calcmet_undercat_form','calcmet_steel_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -2,
+    'file' => 'calcmet_user_shestigrannik.inc',  
+  );
+  $items['services/calcmet/shestigrannik/shestigrannik_change_options'] = array(
+    'page callback' => 'shestigrannik_change_options',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_shestigrannik.inc',  
+  );
+  $items['services/calcmet/shestigrannik/shestigrannik_change_info'] = array(
+    'page callback' => 'shestigrannik_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_shestigrannik.inc',  
+  );
+  $items['services/calcmet/roundprokat'] = array(
+    'title' => 'Круглый прокат',
+    'page callback' => 'set_roundprokat_page',
+    //'page arguments' => array('calcmet_undercat_form','calcmet_steel_form'),
+    'access callback' => TRUE,
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -1,
+    'file' => 'calcmet_user_roundprokat.inc',  
+  );
+  $items['services/calcmet/roundprokat/roundprokat_change_options'] = array(
+    'page callback' => 'roundprokat_change_options',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_roundprokat.inc',  
+  );
+  $items['services/calcmet/roundprokat/roundprokat_change_info'] = array(
+    'page callback' => 'roundprokat_change_info',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'file' => 'calcmet_user_roundprokat.inc',  
+  );
+
+  $items['admin/services/calcmet'] = array(
+    'title' => 'Калькулятор металлопроката',
+    'page callback' => 'calcmet_list',
+    'access arguments' => array('view backend data'),
+  );
+  $items['admin/services/calcmet/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -18,
+  );
+  $items['admin/services/calcmet/addcategory'] = array(
+    'title' => 'Категории',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addcategory'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addcategory.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -17,
+  );
+  $items['admin/services/calcmet/addundercategory'] = array(
+    'title' => 'Подкатегории',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addundercategory'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addundercategory.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -16,
+  );
+  $items['admin/services/calcmet/addarmatura'] = array(
+    'title' => 'Арматура',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addarmatura'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addarmatura.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -15,
+  );
+  $items['admin/services/calcmet/adddvutavrsteelgoryach'] = array(
+    'title' => 'Двутавр 1',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_adddvutavr_1'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_adddvutavr1.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -14,
+  );
+  $items['admin/services/calcmet/adddkvadrat'] = array(
+    'title' => 'Квадрат',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addkvadrat'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addkvadrat.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -13,
+  );
+  $items['admin/services/calcmet/addpolosa'] = array(
+    'title' => 'Полоса',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addpolosa'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addpolosa.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -12,
+  );
+  $items['admin/services/calcmet/addkrug'] = array(
+    'title' => 'Сталь калиброванная круг',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addsteelkrug'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addsteelkrug.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -11,
+  );
+  $items['admin/services/calcmet/addkovkrug'] = array(
+    'title' => 'Сталь кованная круг',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addsteelkovkrug'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addsteelkovkrug.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -11,
+  );
+  $items['admin/services/calcmet/addkovkvadrat'] = array(
+    'title' => 'Сталь кованная квадрат',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addsteelkovkv'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addsteelkovkv.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items['admin/services/calcmet/addtube1'] = array(
+    'title' => 'Труба ст. элсвар. прямошов',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addtube1'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addtube1.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
+  );
+  $items['admin/services/calcmet/addtubeoval'] = array(
+    'title' => 'Труба овал',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addtubeoval'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addtubeoval.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -8,
+  );
+  $items['admin/services/calcmet/addtubekvadrat'] = array(
+    'title' => 'Труба овал',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addtubekvadrat'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addtubekvadrat.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -7,
+  );
+  $items['admin/services/calcmet/addtubebezshva'] = array(
+    'title' => 'Труба',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addtubebezshva'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addtubebezshva.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -7,
+  );
+  $items['admin/services/calcmet/addtubeugol'] = array(
+    'title' => 'Труба',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addtubeugol'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addtubeugol.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -6,
+  );
+  $items['admin/services/calcmet/addshveller'] = array(
+    'title' => 'Швеллеры',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addshveller'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addshveller.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -5,
+  );
+  $items['admin/services/calcmet/addshveller2'] = array(
+    'title' => 'Швеллеры',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addshveller2'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addshveller2.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -5,
+  );
+  $items['admin/services/calcmet/addshestigrannik1'] = array(
+    'title' => 'Швеллеры',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addshestigrannik1'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addshestigrannik1.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -4,
+  );
+  $items['admin/services/calcmet/addshestigrannik2'] = array(
+    'title' => 'Швеллеры',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addshestigrannik2'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_addshestigrannik2.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -3,
+  );
+  $items['admin/services/calcmet/roundprokat'] = array(
+    'title' => 'Пруток',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('calcmet_form_addroundprokat'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'admin_roundprokat.inc',  
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -2,
+  );
+  
+
+  return $items;
+}
+
+/**
+ * Load category
+ */
+function calcmet_load($basename, $entry = array()){
+    // Read all fields from the dbtng_example table.
+    
+  $select = db_select($basename);
+  $select->fields($basename);
+
+  // Add each field and value as a condition to this query.
+  foreach ($entry as $field => $value) {
+    $select->condition($field, $value);
+  }
+  // Return the result in object format.
+  return $select->execute()->fetchAll();
+  
+}
+
+function calcmet_list() {   
+    $output = drupal_get_form('calcmet_form_choicetbd');
+    return $output;
+}
+
+function calcmet_form_choicetbd($form, &$form_state){
+    $names = array(
+        'Категории',
+        'Подкатегории',
+        'ГОСТы',
+        'Арматура',
+        'Двутавр',
+        'Квадрат',
+        'Полоса',
+        'Сталь круг',
+        'Сталь кованный круг',
+        'Труба сварная прямошовная',
+        'Труба без шва',
+        'Труба квадратная',
+        'Труба овальная',
+        'Труба прямоугольная',
+        'Швеллер равнополочный',
+        'Швеллер равнополочный2(не нужен)',
+        'Швеллеры',
+        'Стальной шестигранник',
+        'Калиброванный шестигранник',
+        'Кованный квадрат',
+        'Круглый прокат',
+    );
+    $schemas = drupal_get_schema();
+    //$options = array();
+    $preoptions = array();
+    //dsm($schemas);
+    foreach ($schemas as $schema){
+        if ($schema['module'] == 'calcmet'){
+            //$options[] = array_map('check_plain', (array) $schema['name']);
+            $preoptions[] = $schema['name'];
+            //$options[] = array_combine($names, $schema);
+            //firep($rows);
+        }    
+    }
+    $options = array_combine($preoptions, $names);
+    unset($options['calcmetcat']);
+    unset($options['calcmetundercat']);
+    unset($options['calcmetgost']);
+    unset($options['calcmetshvellerravnopolochtwo']);
+    //firep($options);
+    $form_state['selected'] = isset($form_state['values']['choicetbd']) ? $form_state['values']['choicetbd'] : key($options);
+    $form['choicetbd'] = array(
+        '#type' => 'select',
+        '#title' => 'Тип проката',
+        '#options' => $options,
+        '#ajax' => array(
+            'callback' => 'list_in_table_callback',
+        ),
+        '#suffix' => '<div id="itemstable">'.first_stage( $form_state['selected']).'</div>'
+        //'#suffix' => '<div id="itemstable"></div>'
+    );
+    //$form_state['selected'] = isset($form_state['values']['choicetbd']) ? $options[$form_state['values']['choicetbd']] : $options[0];
+    //$form_state['selected'] = isset($form_state['values']['choicetbd']) ? $form_state['values']['choicetbd'] : key($options);
+    //dsm($form_state['selected']);
+    //firep($form_state['selected']);
+    return $form;        
+}
+
+function first_stage( $str){
+     $entries = db_select($str)
+            -> fields($str)
+            //-> extend('PagerDefault')
+            -> execute()
+            -> fetchAll(PDO::FETCH_ASSOC);
+    $rows = array();
+       foreach ($entries as $entry) {               
+         $rows[] = array_map('check_plain', $entry);
+       }
+        $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'),
+                    t('Диаметр стержня'), 
+                    t('Площадь поперечного сечения, см2'), 
+                    t('Масса 1 м, кг')
+                );
+        
+    return theme('table', array('header' => $header, 'rows' => $rows));
+}
+
+function list_in_table_callback($form, $form_state){
+    //dsm($form);
+    //firep($form_state['selected']);
+    //$entries = calcmet_load("'".$form_state['selected']."'");
+    $entries = db_select("'".$form_state['selected']."'")
+            -> fields("'".$form_state['selected']."'")
+            //-> extend('PagerDefault')
+            -> execute()
+            -> fetchAll(PDO::FETCH_ASSOC);
+    
+    if (!empty($entries)) {
+       $rows = array();
+       foreach ($entries as $entry) {
+         // Sanitize the data before handing it off to the theme layer.
+         //dsm($entry);
+         $catname = db_select('calcmetcat', 'cat')
+                    -> fields ('cat', array('Title'))
+                    -> condition('cat.ccid', $entry['ccid'])
+                    -> execute()
+                    -> fetchField();
+//         if ($entry['cucid'] !== 0){
+//            $ucatname = db_select('calcmetundercat', 'ucat')
+//                    -> fields ('ucat', array('Title'))
+//                    -> condition('ucat.cucid', $entry['cucid'])
+//                    -> execute()
+//                    -> fetchField();
+//         }
+         //dsm($catname);       
+         $rows[] = array_map('check_plain', $entry);
+       }
+       //dsm($rows);
+       // Make a table for them.
+       $output = '<h3>'.$catname.'</h3>';
+//       if (!empty($ucatname)){
+//          $output .= '<h4>'.$ucatname.'</h4>';
+//       }
+       switch ($form_state['selected']) {
+           case 'calcmetcat':
+               $header = array(t('№ п/п'), t('Название категории'));
+               break;
+           case 'calcmetundercat':
+               $header = array(
+                    t('№ п/п'),
+                    t('№ категории'), 
+                    t('Название подкатегории'), 
+                    t('ссылка на рисунок')
+                );
+               break;
+           case 'calcmetarmatura':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'),
+                    t('Диаметр стержня'), 
+                    t('Площадь поперечного сечения, см2'), 
+                    t('Масса 1 м, кг')
+                );
+               break;
+           case 'calcmetdvutavr':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Номер двутавра'), 
+                    t('Высота (h), мм'), 
+                    t('Ширина (b), мм'),
+                    t('Толщина (s), мм'),
+                    t('Толщина полки (t), мм'),
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                    t('Расчет площади поверхности в м2 1 кг (м2)'),
+                );
+               break;
+           case 'calcmetkvadrat':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Cторона квадрата (а), мм'), 
+                    t('Площадь поперечного сечения, см2'), 
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetpolosa':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название проката'), 
+                    t('Ширина полосы (b), мм'), 
+                    t('Толщина полосы (а), мм'), 
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetsteelkrug':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Диаметр, мм проката'), 
+                    t('Площадь поперечного сечения, мм2'), 
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetsteelkovkrug':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Диаметр, мм проката'), 
+                    t('Площадь поперечного сечения, мм2'), 
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetsteelkovkvadrat':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Cторона квадрата (а), мм'), 
+                    t('Площадь поперечного сечения, см2'), 
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmettubestellsvarnpryamoshovn':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название'), 
+                    t('Наружный диаметр, мм'), 
+                    t('Толщина стенки, мм'), 
+                    t('Масса 1 м, кг'),
+                    t('Площадь поверхности окраски 1м трубы, м2'),
+                );
+               break;
+           case 'calcmettubessteelwithoutseam':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название'), 
+                    t('Наружный диаметр, мм'), 
+                    t('Толщина стенки, мм'),                    
+                    t('Площадь поверхности окраски 1м трубы, м2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmettubessteeloval':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название'), 
+                    t('Сторона (A), мм'), 
+                    t('Сторона (B), мм'), 
+                    t('Толщина стенки, мм'),                    
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmettubessteelkvadrat':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название'), 
+                    t('Сторона, мм'), 
+                    t('Толщина стенки, мм'),                    
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmettubessteelugol':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название'), 
+                    t('Сторона (A), мм'), 
+                    t('Сторона (B), мм'), 
+                    t('Толщина стенки, мм'),                    
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetshvellerravnopoloch':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Название'), 
+                    t('Высота (h), мм'), 
+                    t('Ширина полки (b), мм'), 
+                    t('Толщина (s), мм'),                    
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetshveller':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Номер швеллера'), 
+                    t('Высота (h), мм'), 
+                    t('Ширина полки (b), мм'), 
+                    t('Толщина стенки (s), мм'),                    
+                    t('Толщина полки (t), мм'),                    
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                    t('Расчет площади поверхности в м2 1 кг (м2)'),
+                );
+               break;
+           case 'calcmetsteelshestigran':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Диаметр вписанного круга (d), мм'),                    
+                    t('Площадь сечения, см2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetcalibrshestigran':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Размер проката (диаметр вписанного круга (а) или размер "под ключ"), мм'),                    
+                    t('Диаметр описанной окружности (А), мм'),
+                    t('Площадь поперечного сечения, мм2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           case 'calcmetprutok':
+               $header = array(
+                    t('№ п/п'), 
+                    t('№ категории'), 
+                    t('№ подкатегории'), 
+                    t('Введите диаметр (d), мм'),
+                    t('Площадь поперечного сечения, мм2'),
+                    t('Масса 1 м, кг'),
+                );
+               break;
+           
+
+           default:
+               $header = array(t('1'), t('2'), t('3'), t('4'), t('5'), t('6'));
+               break;
+       }
+       
+       $output .= theme('table', array('header' => $header, 'rows' => $rows));
+       //$output .= theme('pager');
+     }
+     else {
+       drupal_set_message(t('No entries meet'));
+     } 
+    $commands = array();
+    //$commands[] = ajax_command_after($selector, "New 'after'...");
+    $commands[] = ajax_command_replace("#itemstable", "<div id='itemstable'>" . $output . "</div>");
+    return array('#type' => 'ajax', '#commands' => $commands);
+    
+    //return $output;
+}
+
+function calcmet_entry_insert($basename, $entry) {
+  $return_value = NULL;
+  try {
+    $return_value = db_insert($basename)
+                    ->fields($entry)
+                    ->execute();
+  }
+  catch (Exception $e) {
+    drupal_set_message(t('db_insert failed. Message = %message, query= %query',
+      array('%message' => $e->getMessage(), '%query' => $e->query_string)), 'error');
+  }
+  //dpm ($return_value);
+  return $return_value;
+}

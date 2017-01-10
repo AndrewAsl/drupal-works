@@ -1,0 +1,1044 @@
+<?php
+/**
+ * Implements hook_schema().
+ *
+ * Defines the database tables used by this module.
+ * Remember that the easiest way to create the code for hook_schema is with
+ * the @link http://drupal.org/project/schema schema module @endlink
+ *
+ * @see hook_schema()
+ * @ingroup calcmet
+ * 'gost' => array(
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'GOST description.', 
+    ),
+ */
+function calcmet_schema() {
+  $schema['calcmetcat'] = array(
+    'description' => 'Category to calcmet',
+    'fields' => array(
+      'ccid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique person ID.',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the category.',
+      ),
+    ),   
+    'primary key' => array('ccid'),
+    'indexes' => array(
+      'title'    => array('title'),
+    ),
+  );
+  $schema['calcmetundercat'] = array(
+    'description' => 'Under-Category to calcmet',
+    'fields' => array(
+      'cucid'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique person ID.',
+      ),
+      'ccid'  => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => "Ref to {calcmetcat}.ccid",
+      ), 
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the category.',
+      ),
+      'image' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'Link to image for undercategory',
+      ),  
+    ),
+    'primary key' => array('cucid'),
+    'indexes' => array(
+      'title'    => array('title'),
+      'ccid' => array('ccid'),  
+    ),
+  );
+  $schema['calcmetgost'] = array(
+    'description' => 'GOST to calcmet',
+    'fields' => array(
+        'gostid'  => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique person ID.',
+        ),
+        'ccid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {calcmetcat}.ccid",
+        ), 
+        'cucid'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => "Ref to {calcmetundercat}.cucid",
+        ), 
+        'title' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'description' => 'Name of the category.',
+        ),
+        'descriptiongost' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',  
+          'description' => 'Name of the category.',
+        ),
+    ),   
+    'primary key' => array('gostid'),
+    'indexes' => array(
+      'title'    => array('title'),
+      'descriptiongost'   => array('descriptiongost'),
+    ),
+  );
+  $schema['calcmetarmatura'] = array(
+        'description' => 'Data table for armatura',
+        'fields' => array(
+            'adid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'diametr' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Diametr for armatura',   
+            ),
+            'csa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for armatura, sm sq',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+        ),    
+        'primary key' => array('adid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'diametr' => array('diametr'),  
+         ), 
+  );
+  $schema['calcmetdvutavr'] = array(
+        'description' => 'Data table for dvutavr',
+        'fields' => array(
+            'dvdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'dvutavrname' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Number for dvutavr within GOST',   
+            ),
+            'dvutavrheight' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Height for dvutavr within GOST, mm',   
+            ),
+            'dvutavrwidth' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Width for dvutavr within GOST, mm',   
+            ),
+            'dvutavrthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness for dvutavr within GOST, mm',   
+            ),
+            'dvutavrthicknesspolka' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness polka for dvutavr within GOST, mm',   
+            ),
+            'csa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for dvutavr, sm sq',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg for dvutavr, m sq',   
+            ),
+        ),    
+        'primary key' => array('dvdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'dvutavrname' => array('dvutavrname'),  
+         ),   
+  );
+  $schema['calcmetkvadrat'] = array(
+        'description' => 'Data table for kvadrat',
+        'fields' => array(
+            'kvdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'storona' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Side for kvadrat',   
+            ),
+            'kvcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for kvadrat, sm sq',   
+            ),
+            'kvmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+        ),    
+        'primary key' => array('kvdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'storona' => array('storona'),  
+         ), 
+  );
+  $schema['calcmetpolosa'] = array(
+        'description' => 'Data table for kvadrat',
+        'fields' => array(
+            'pdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'polosaname' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,  
+              'description' => 'Name for polosa within GOST',   
+            ),
+            'polwidth' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Side for kvadrat',   
+            ),
+            'polthikcness' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Thikcness for kvadrat',   
+            ),
+            'polmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+        ),    
+        'primary key' => array('pdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'polosaname' => array('polosaname'),  
+         ), 
+  );
+  $schema['calcmetsteelkrug'] = array(
+        'description' => 'Data table for steel calibr rounded',
+        'fields' => array(
+            'skdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'skdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Diametr for kvadrat',   
+            ),
+            'skcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+            'skmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for prokat, kg',   
+            ),
+        ),    
+        'primary key' => array('skdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'skdiametr' => array('skdiametr'),  
+         ), 
+  );
+  $schema['calcmetsteelkovkrug'] = array(
+        'description' => 'Data table for steel forge rounded',
+        'fields' => array(
+            'skkdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'skkdiametr' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Diametr for kvadrat',   
+            ),
+            'skkcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+            'skkmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for prokat, kg',   
+            ),
+        ),    
+        'primary key' => array('skkdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'skkdiametr' => array('skkdiametr'),  
+         ), 
+  );
+  $schema['calcmettubestellsvarnpryamoshovn'] = array(
+        'description' => 'Data table for tubes electrowelded straight-line-seam',
+        'fields' => array(
+            'tsshdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'tsshname' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for pipe electrowelded straight-line-seam within GOST',   
+            ),
+            'tsshdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tsshthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg for dvutavr, m sq',   
+            ),
+        ),    
+        'primary key' => array('tsshdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'tsshname' => array('tsshname'),  
+         ),   
+  );
+  $schema['calcmettubessteelwithoutseam'] = array(
+        'description' => 'Data table for pipes are steel seamless hot-rolled',
+        'fields' => array(
+            'tswsdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'tswsname' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for pipes are steel seamless hot-rolled within GOST',   
+            ),
+            'tswsdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tswsthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg, m sq',   
+            ),
+        ),    
+        'primary key' => array('tswsdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'tswsname' => array('tswsname'),  
+         ),   
+  );
+  $schema['calcmettubessteelkvadrat'] = array(
+        'description' => 'Data table for pipes are steel squared',
+        'fields' => array(
+            'tskvdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'tskvname' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for pipes are steel seamless hot-rolled within GOST',   
+            ),
+            'tskvstorona' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tskvthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg, m sq',   
+            ),
+        ),    
+        'primary key' => array('tskvdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'tskvname' => array('tskvname'),  
+         ),   
+  );
+  $schema['calcmettubessteeloval'] = array(
+        'description' => 'Data table for pipes are steel oval',
+        'fields' => array(
+            'tsovdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'tsovname' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for pipes are steel oval within GOST',   
+            ),
+            'tsovstorona1' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tsovstorona2' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tsovthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg, m sq',   
+            ),
+        ),    
+        'primary key' => array('tsovdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'tsovname' => array('tsovname'),  
+         ),   
+  );
+  $schema['calcmettubessteelugol'] = array(
+        'description' => 'Data table for pipes are steel rectangular',
+        'fields' => array(
+            'tsugdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'tsugname' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for pipes are steel oval within GOST',   
+            ),
+            'tsugstorona1' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tsugstorona2' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Outside diameter within GOST, mm',   
+            ),
+            'tsugthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg, m sq',   
+            ),
+        ),    
+        'primary key' => array('tsugdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'tsugname' => array('tsugname'),  
+         ),   
+  );
+  $schema['calcmetshvellerravnopoloch'] = array(
+        'description' => 'Data table',
+        'fields' => array(
+            'shvravnpoldid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'shvellername' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for shveller within GOST',   
+            ),
+            'shvellerheight' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Shveller height within GOST, mm',   
+            ),
+            'shvellerpolkawidth' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Width of shveller\'s polka within GOST, mm',   
+            ),
+            'shvellerthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+        ),    
+        'primary key' => array('shvravnpoldid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'shvellername' => array('shvellername'),  
+         ),   
+  );
+  $schema['calcmetshvellerravnopolochtwo'] = array(
+        'description' => 'Data table',
+        'fields' => array(
+            'shvravnpoltwodid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'shvellername' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for shveller within GOST',   
+            ),
+            'shvellerheight' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Shveller height within GOST, mm',   
+            ),
+            'shvellerpolkawidth' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Width of shveller\'s polka within GOST, mm',   
+            ),
+            'shvellerthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+        ),    
+        'primary key' => array('shvravnpoltwodid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'shvellername' => array('shvellername'),  
+         ),   
+  );
+  $schema['calcmetshveller'] = array(
+        'description' => 'Data table',
+        'fields' => array(
+            'shvellerdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'shvellername' => array(
+              'type' => 'varchar',
+              'length' => 255,  
+              'not null' => TRUE,
+              'description' => 'Name for shveller within GOST',   
+            ),
+            'shvellerheight' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Shveller height within GOST, mm',   
+            ),
+            'shvellerpolkawidth' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Width of shveller\'s polka within GOST, mm',   
+            ),
+            'shvellerthickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'shvellerpolkathickness' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Thickness within GOST, mm',   
+            ),
+            'shvellercsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area to shveller within GOST, mm',   
+            ),
+            'massonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for armatura, kg',   
+            ),
+            'drawonemetr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area 1 kg, m sq',   
+            ),
+        ),    
+        'primary key' => array('shvellerdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'shvellername' => array('shvellername'),  
+         ),   
+  );
+  $schema['calcmetsteelshestigran'] = array(
+        'description' => 'Data table for steel forge sixsized',
+        'fields' => array(
+            'stshdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'stshdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Diametr for kvadrat',   
+            ),
+            'stshcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+            'stshmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for prokat, kg',   
+            ),
+        ),    
+        'primary key' => array('stshdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'stshdiametr' => array('stshdiametr'),  
+         ), 
+  );
+  $schema['calcmetcalibrshestigran'] = array(
+        'description' => 'Data table for steel forge sixsized',
+        'fields' => array(
+            'calshdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'calshdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Diametr for kvadrat',   
+            ),
+            'calshvneshdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Diametr for kvadrat',   
+            ),
+            'calshcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+            'stshmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for prokat, kg',   
+            ),
+        ),    
+        'primary key' => array('calshdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'stshdiametr' => array('calshdiametr'),  
+         ), 
+  );
+  $schema['calcmetsteelkovkvadrat'] = array(
+        'description' => 'Data table for steel forge square',
+        'fields' => array(
+            'skkvdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'skkvstorona' => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'description' => 'Diametr for kvadrat',   
+            ),
+            'skkvcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+            'skkvmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for prokat, kg',   
+            ),
+        ),    
+        'primary key' => array('skkvdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'skkvstorona' => array('skkvstorona'),  
+         ), 
+  );
+  $schema['calcmetprutok'] = array(
+        'description' => 'Data table for steel forge rounded',
+        'fields' => array(
+            'prutokdid' => array(
+                'type' => 'serial',
+                'not null' => TRUE,
+                'description' => 'Primary Key: Unique person ID.', 
+            ),
+            'ccid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetcat}.ccid",
+            ), 
+            'cucid'  => array(
+              'type' => 'int',
+              'not null' => TRUE,
+              'default' => 0,
+              'description' => "Ref to {calcmetundercat}.cucid",
+            ),
+            'prutokdiametr' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Diametr for prutok',   
+            ),
+            'prutokcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+            'prutokmassonem' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Weight 1 m for prokat, kg',   
+            ),
+            'drawprutokcsa' => array(
+              'type' => 'float',
+              'not null' => TRUE,
+              'description' => 'Cross-section area for circle, sm sq',   
+            ),
+        ),    
+        'primary key' => array('prutokdid'),
+        'indexes' => array(
+            'ccid' => array('ccid'),  
+            'cucid' => array('cucid'),  
+            'prutokdiametr' => array('prutokdiametr'),  
+         ), 
+  );
+
+  return $schema;
+}

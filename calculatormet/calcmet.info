@@ -1,0 +1,7 @@
+name = Metall's Calculator  
+description = This module calculate weight and square for drawing metall's procat.
+package = Custom
+core = 7.x
+
+
+
